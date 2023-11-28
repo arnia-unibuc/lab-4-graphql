@@ -1,6 +1,6 @@
 const app = require('./app');
 
-app.listen(3001, () => {
+app.start(3001).then(() => {
     console.log("Running");
 });
 
