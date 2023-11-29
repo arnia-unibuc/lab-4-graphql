@@ -1,17 +1,13 @@
-const db = require('../db');
+const db = require('../../models');
 
-const createUserResolver = (_, args, { user }) => {
-    if(!user.roles.includes('ADMIN')) {
-        return null;
-    }
-
-    const newUser = {
-      id: db.users.length + 1,
-      ...args,
-    }
-
-    db.users.push(newUser);
-
+const createUserResolver = async (_, { user }) => {
+    const { name, email, password } = user;
+    const newUser = await db.User.create({
+      name,
+      email,
+      password
+    });
+  
     return newUser;
 }
 

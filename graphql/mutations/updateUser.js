@@ -3,23 +3,22 @@ const db = require('../db');
 const { 
     GraphQLString,
     GraphQLNonNull,
+    GraphQLID,
 } = require('graphql');
 const UserType = require('../types/userType');
 const updateUserResolver = require('../resolvers/updateUserResolver');
+const userInputType = require('../types/userInputType');
 
 
 const updateUser = {
     type: UserType,
     args: {
-      email: {
-        type: new GraphQLNonNull(GraphQLString),
+      id: {
+        type: new GraphQLNonNull(GraphQLID),
       },
-      name: {
-        type: new GraphQLNonNull(GraphQLString),
+      user: {
+        type: userInputType,
       },
-      password: {
-        type: new GraphQLNonNull(GraphQLString),
-      }
     },
     resolve: updateUserResolver,
 }

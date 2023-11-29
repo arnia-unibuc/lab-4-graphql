@@ -1,11 +1,21 @@
-const db = require('../db');
+const db = require('../../models');
 
-const deleteUserResolver = (_, args) => {
+const deleteUserResolver = async (_, args) => {
     const { id } = args;
 
-    db.users = db.users.filter((user) => user.id !== id);
+    const targetUser = await db.User.findByPk(id);
 
-    return true;
+    if(!targetUser) {
+      return null;
+    }
+
+    try {
+      await targetUser.destroy();
+
+      return true;
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
 module.exports = deleteUserResolver;

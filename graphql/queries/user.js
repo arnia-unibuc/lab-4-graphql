@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../../models');
 
 const { 
     GraphQLNonNull,
@@ -19,7 +19,7 @@ const userQuery = {
     },
     resolve: (_, args) => {
       const { id } = args;
-      return db.users.find(user => user.id === parseInt(id));
+      return db.User.findByPk(id);
     }
 }
 
