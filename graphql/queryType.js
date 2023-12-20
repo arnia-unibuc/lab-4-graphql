@@ -10,12 +10,14 @@ const {
 
 const userQuery = require('./queries/user');
 const usersQuery = require('./queries/users');
+const postQuery = require('./queries/post');
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
     fields: {
       users: usersQuery,
       user: userQuery,
+      post: postQuery,
     }
 })
 
