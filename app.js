@@ -6,23 +6,37 @@ const schema = require('./graphql');
 const app = express();
 app.use(express.json());
 
-const db = require('./graphql/db')
+const db = require('./models');
+const { JWT_SECRET } = require('./config/constants');
+const jwt = require('jsonwebtoken');
 
-const checkAuthorization = (req, res, next) => {
+const checkAuthorization = async (req, res, next) => {
   const { authorization } = req.headers;
 
-  const userId = authorization.split(':')[1];
+  if(!authorization) {
+    next();
+    return;
+  }
 
-  const user = db.users.find((user) => user.id === userId);
+  const token = authorization.replace('Bearer ', '');
 
-  req.auth = {
-    user,
+  const data = jwt.verify(token, JWT_SECRET);
+
+  const user = await db.User.findByPk(data.userId);
+  
+  if(user) {
+    req.user = user.dataValues;
   }
 
   next();
 }
 
-app.all('/graphql', checkAuthorization, createHandler({ schema }))
+app.all('/graphql', checkAuthorization, createHandler({
+   schema,
+   context: (req) => {
+     return req.raw.user;
+   },
+}))
 
 async function start(port) {
   return new Promise((resolve) => app.listen({ port }, resolve));

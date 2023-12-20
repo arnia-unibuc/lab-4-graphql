@@ -10,8 +10,12 @@ const UserType = require('../types/userType');
 
 const usersQuery = {
     type: new GraphQLList(UserType),
-    resolve: () => {
-      return db.User.findAll();
+    resolve: (_, args, user) => {
+      if(user.id === 1) {
+        return db.User.findAll();
+      }
+
+      return [];3
     },
 }
 
